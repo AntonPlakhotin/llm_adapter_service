@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class    AskLlmRes {
+public class AskLlmRes {
     private String message;
 }
