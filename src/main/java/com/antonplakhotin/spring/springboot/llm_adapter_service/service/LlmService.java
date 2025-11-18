@@ -30,7 +30,10 @@ public class LlmService {
             // Используем переданный systemPrompt
             messages.add(Map.of("role", "system", "content", systemPrompt));
 
-            for (Message msg : history) {
+            // Берем только последние 3 сообщения из истории
+            List<Message> recentHistory = getLastMessages(history, 3);
+
+            for (Message msg : recentHistory) {
                 String role = msg.getAuthor().name().equalsIgnoreCase("USER") ? "user" : "assistant";
                 messages.add(Map.of("role", role, "content", msg.getContent()));
             }
@@ -71,5 +74,18 @@ public class LlmService {
             e.printStackTrace();
             return "Ошибка при вызове LLM API: " + e.getMessage();
         }
+    }
+
+    private List<Message> getLastMessages(List<Message> history, int count) {
+        if (history == null || history.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        if (history.size() <= count) {
+            return new ArrayList<>(history);
+        }
+
+        // Берем последние 'count' сообщений
+        return new ArrayList<>(history.subList(history.size() - count, history.size()));
     }
 }
